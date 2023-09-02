@@ -10,7 +10,7 @@ import logging
 import numpy as np
 from torch.utils.data import Dataset
 
-from utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
+from GC_SEE_utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
 
 
 class Data:
@@ -64,7 +64,7 @@ def load_graph_data(root_path=".", dataset_name="dblp", show_details=False):
         format='%(message)s',
         level=logging.INFO,
         stream=sys.stdout)
-    root_path = root_path + "dataset/"
+    root_path = root_path + "GC_SEE_dataset/"
     if not os.path.exists(root_path):
         os.makedirs(root_path)
     dataset_path = root_path + dataset_name

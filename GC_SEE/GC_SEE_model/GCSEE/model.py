@@ -13,11 +13,11 @@ import torch.nn.functional as F
 
 
 from torch.nn.parameter import Parameter
-from GC_SEE.GC_SEE_module.AE import AE
-from GC_SEE.GC_SEE_module.FAFGC import FAFGC
-from GC_SEE.GC_SEE_module.GAT_for_GCSEE import GAT
-from GC_SEE.GC_SEE_module.GCN import GCN
-from GC_SEE.GC_SEE_module.SFGC import SFGC
+from GC_SEE_module.AE import AE
+from GC_SEE_module.FAFGC import FAFGC
+from GC_SEE_module.GAT_for_GCSEE import GAT
+from GC_SEE_module.GCN import GCN
+from GC_SEE_module.SFGC import SFGC
 
 
 class GCSEE(nn.Module):

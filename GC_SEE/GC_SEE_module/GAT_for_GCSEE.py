@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from GC_SEE.GC_SEE_module.GATLayer import GraphAttentionLayer
+from GC_SEE_module.GATLayer import GraphAttentionLayer
 
 
 class GAT(nn.Module):

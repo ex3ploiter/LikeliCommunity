@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from torch.nn.modules.module import Module
 from torch.nn import Linear
 
-from GC_SEE.GC_SEE_module.GCN import GCN
+from GC_SEE_module.GCN import GCN
 
 
 class SFGC(Module):

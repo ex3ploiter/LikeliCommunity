@@ -9,11 +9,13 @@
 import torch
 import importlib
 
-from utils.options import parser
-from dataset import dataset_info
-from utils import logger, time_manager, path_manager, plot, rand
-from utils.load_data import load_data
-from utils.utils import cal_mean_std, record_metrics
+
+# from GC_SEE_utils
+from GC_SEE_utils.options import parser
+from GC_SEE_dataset import dataset_info
+from GC_SEE_utils import logger, time_manager, path_manager, plot, rand
+from GC_SEE_utils.load_data import load_data
+from GC_SEE_utils.utils import cal_mean_std, record_metrics
 
 
 if __name__ == "__main__":
@@ -40,7 +42,7 @@ if __name__ == "__main__":
                      t=args.t)
 
     # Auto import the training module of the model you specified.
-    model_train = importlib.import_module(f"model.{args.model_name}.train")
+    model_train = importlib.import_module(f"GC_SEE_model.{args.model_name}.train")
     train = getattr(model_train, "train")
 
     # Training

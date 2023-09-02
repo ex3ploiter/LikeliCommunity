@@ -12,11 +12,11 @@ import numpy as np
 
 from torch.optim import Adam
 from sklearn.cluster import KMeans
-from model.GCSEE.model import GCSEE
-from utils import data_processor
-from utils.evaluation import eva
-from utils.result import Result
-from utils.utils import count_parameters, get_format_variables
+from GC_SEE_model.GCSEE.model import GCSEE
+from GC_SEE_utils import data_processor
+from GC_SEE_utils.evaluation import eva
+from GC_SEE_utils.result import Result
+from GC_SEE_utils.utils import count_parameters, get_format_variables
 from torch_geometric.data import Data
 from ComputeLikelihood import LikelihoodComputer
 

@@ -47,7 +47,7 @@ def get_path(args):
             for item in pretrain_type_list:
                 type_name = item.split("_")[-1]
                 exec(f"args.pretrain_{type_name}_save_path = "
-                     f"'./pretrain/pretrain_{type_name}/{pretrain_for}/{args.dataset_name}/'")
+                     f"'./GC_SEE_pretrain/pretrain_{type_name}/{pretrain_for}/{args.dataset_name}/'")
     directory_structure = args.model_name + "/" + args.dataset_name + "/"
     args.log_save_path = "./logs/" + directory_structure
     args.dataset_path = "./"
@@ -55,9 +55,9 @@ def get_path(args):
     args.embedding_heatmap_save_path = "./img/heatmap/" + directory_structure
 
     if pretrain_type == "pretrain_ae":
-        args.pretrain_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
+        args.pretrain_save_path = "./GC_SEE_pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_gat":
-        args.pretrain_save_path = "./pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
+        args.pretrain_save_path = "./GC_SEE_pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type is None:
         pass
     elif pretrain_type == "multi":
