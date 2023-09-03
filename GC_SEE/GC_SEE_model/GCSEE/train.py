@@ -21,6 +21,8 @@ from torch_geometric.data import Data
 from ComputeLikelihood import LikelihoodComputer
 
 
+device="cuda" if torch.cuda.is_available() else "cpu"
+
 
 def train(args, data, logger):
     # format: [lambda3, lambda4, max_epoch, lr]
@@ -90,6 +92,10 @@ def train(args, data, logger):
         kl_loss_hh = F.kl_div(q_h.log(), ph, reduction='batchmean')
         kl_loss_rh = F.kl_div(q_r.log(), ph, reduction='batchmean')
         kl_loss2 = kl_loss_hh + kl_loss_rh
+        
+        
+        
+        getLikelihood(model,data,data.feature,adj,adj_norm,M)
 
         loss = args.lambda3 * kl_loss2 + args.lambda4 * kl_loss1 + re_loss
 
@@ -118,7 +124,7 @@ def train(args, data, logger):
 
 def getLikelihood(model,data,feature, adj, adj_norm, M):
     
-    _, _, pred, _, _, embedding = model(feature, adj, adj_norm, M)
+    _, _, pred, _, _, embedding = model(feature.to(device), adj, adj_norm, M)
     predicted_class = torch.argmax(pred, dim=1)
     clusters = {}
 
