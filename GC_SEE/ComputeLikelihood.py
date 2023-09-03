@@ -88,7 +88,8 @@ class LikelihoodComputer(nn.Module):
         # roc_auc = roc_auc_score(targets, preds)
 
         # print(f"TRAIN Loss: {total_loss}, ROC AUC: {roc_auc}")
-        print(f"VGAE TRAIN Loss: {total_loss}")
+        
+        # print(f"VGAE TRAIN Loss: {total_loss}")
 
     def train(self):
         for epoch in range(self.config["EPOCHS"]):
