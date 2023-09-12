@@ -53,6 +53,9 @@ class LoadDataset(Dataset):
 def download_dataset():
     
     
+    # Remove the destination directory if it exists
+    if os.path.exists(new_dir_path):
+        shutil.rmtree(new_dir_path)
     
 
 
@@ -70,9 +73,6 @@ def download_dataset():
     # Check if the old directory exists
     if os.path.exists(old_dir_path):
         try:
-            # Remove the destination directory if it exists
-            if os.path.exists(new_dir_path):
-                shutil.rmtree(new_dir_path)
             
             # Rename the directory
             os.rename(old_dir_path, new_dir_path)
