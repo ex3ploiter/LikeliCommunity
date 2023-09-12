@@ -55,8 +55,8 @@ def download_dataset():
     
     import os
 
-    old_dir_path = "./GC_SEE/dataset"
-    new_dir_path = "./GC_SEE/GC_SEE_dataset"
+    old_dir_path = "./dataset"
+    new_dir_path = "./GC_SEE_dataset"
 
     # Check if the old directory exists
     if os.path.exists(old_dir_path):
