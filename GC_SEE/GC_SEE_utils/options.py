@@ -49,4 +49,4 @@ parser.add_argument("-S", "--seed", type=int, default=0,
                     help="The random seed. The default value is 0.")
 
 
-parser.add_argument("-LI", "--likelihood", dest="likelihood_loss", default=True, action="store_true")
+parser.add_argument("-LI", "--likelihood", dest="likelihood_loss", default=False, action="store_true")
