@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # Load data, including features, label, adjacency matrix.
     
     
-    download_dataset()
+    
     
     data = load_data(args.k, args.dataset_path, args.dataset_name,
                      feature_type=args.feature_type, label_type=args.label_type, adj_type=args.adj_type,
