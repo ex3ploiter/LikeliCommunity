@@ -9,7 +9,8 @@ import torch
 import logging
 import numpy as np
 from torch.utils.data import Dataset
-import gdown
+import gdown    
+import shutil
 
 from GC_SEE_utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
 from torch_geometric.datasets import WebKB, AttributedGraphDataset, WikipediaNetwork, Amazon
@@ -53,7 +54,7 @@ def download_dataset():
     
     
     
-    import os
+
 
     old_dir_path = "./dataset"
     new_dir_path = "./GC_SEE_dataset"
@@ -68,15 +69,17 @@ def download_dataset():
     # Check if the old directory exists
     if os.path.exists(old_dir_path):
         try:
+            # Remove the destination directory if it exists
+            if os.path.exists(new_dir_path):
+                shutil.rmtree(new_dir_path)
+            
             # Rename the directory
             os.rename(old_dir_path, new_dir_path)
             print(f"Directory renamed from {old_dir_path} to {new_dir_path}")
         except OSError as e:
             print(f"Error renaming directory: {e}")
     else:
-        print(f"The directory {old_dir_path} does not exist.")
-        
-    print('----- Downloading dataset folder has ended -----')       
+        print(f"The directory {old_dir_path} does not exist.")    
     
     
 
