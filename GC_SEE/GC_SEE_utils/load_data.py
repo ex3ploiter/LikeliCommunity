@@ -11,6 +11,8 @@ import numpy as np
 from torch.utils.data import Dataset
 
 from GC_SEE_utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
+from torch_geometric.datasets import WebKB, AttributedGraphDataset, WikipediaNetwork, Amazon
+from scipy.sparse import coo_matrix
 
 
 class Data:
@@ -45,6 +47,27 @@ class LoadDataset(Dataset):
                torch.from_numpy(np.array(idx))
 
 
+def load_graph_data_pyG_Attributed_graph(root_path=".", dataset_name="dblp", show_details=False):
+    print(dataset_name)
+    dataset = AttributedGraphDataset(root='./data/attr/{}'.format(dataset_name), name="{}".format(dataset_name))
+    data = dataset[0]
+    X = data.x.numpy()
+    gnd = data.y.numpy()
+    N = X.shape[0]
+    # train_mask, val_mask, test_mask = data.train_mask, data.val_mask, data.test_mask
+    # print(N)
+    # A = np.zeros((N, N))
+    row = data.edge_index[0].numpy()
+    col = data.edge_index[1].numpy()
+    M = data.num_edges
+    values = torch.ones(M)
+    adj = coo_matrix((values, (row, col)), shape=(N, N))
+    adj = adj.todense()
+    adj = np.array(adj)
+
+    return X, gnd,adj
+    
+    
 def load_graph_data(root_path=".", dataset_name="dblp", show_details=False):
     """
     load graph data
@@ -161,7 +184,8 @@ def load_data(k, dataset_path, dataset_name,
     """
     # If the dataset is not graph dataset, use construct_graph to get KNN graph.
     if k is None:
-        feature, label, adj = load_graph_data(dataset_path, dataset_name)
+        # feature, label, adj = load_graph_data(dataset_path, dataset_name)
+        feature, label, adj = load_graph_data_pyG_Attributed_graph(dataset_path, dataset_name)
     else:
         feature, label = load_non_graph_data(dataset_path, dataset_name)
         metric_dict = {"usps": "heat", "hhar": "cosine", "reut": "cosine"}
