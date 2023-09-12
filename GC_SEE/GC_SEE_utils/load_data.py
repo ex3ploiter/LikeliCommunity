@@ -50,6 +50,7 @@ class LoadDataset(Dataset):
 
 
 def download_dataset():
+    print('----- Downloading dataset folder is starting -----')
     gdown.download_folder('https://drive.google.com/drive/folders/1TlpGNU9miqJtGYs6hDBJfqlicyZLpJ8F?usp=drive_link', quiet=True)
     
     import os
@@ -67,6 +68,8 @@ def download_dataset():
             print(f"Error renaming directory: {e}")
     else:
         print(f"The directory {old_dir_path} does not exist.")
+        
+    print('----- Downloading dataset folder has ended -----')       
     
     
 
