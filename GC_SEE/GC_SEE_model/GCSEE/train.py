@@ -95,9 +95,11 @@ def train(args, data, logger):
         
         
         
-        getLikelihood(model,data,data.feature,adj,adj_norm,M)
+        likelihood_loss=getLikelihood(model,data,data.feature,adj,adj_norm,M)
 
-        loss = args.lambda3 * kl_loss2 + args.lambda4 * kl_loss1 + re_loss
+        loss = args.lambda3 * kl_loss2 + args.lambda4 * kl_loss1 + re_loss 
+        
+        loss=loss+ 1000*likelihood_loss
 
         optimizer.zero_grad()
         loss.backward()

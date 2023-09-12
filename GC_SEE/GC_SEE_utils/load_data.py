@@ -61,6 +61,7 @@ def download_dataset():
     
     if os.path.exists(new_dir_path):
         print('----- Dataset already is downloaded -----')
+        return
         
         
     print('----- Downloading dataset folder is starting -----')        
