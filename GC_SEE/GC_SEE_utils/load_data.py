@@ -50,13 +50,20 @@ class LoadDataset(Dataset):
 
 
 def download_dataset():
-    print('----- Downloading dataset folder is starting -----')
-    gdown.download_folder('https://drive.google.com/drive/folders/1TlpGNU9miqJtGYs6hDBJfqlicyZLpJ8F?usp=drive_link', quiet=True)
+    
+    
     
     import os
 
     old_dir_path = "./dataset"
     new_dir_path = "./GC_SEE_dataset"
+    
+    if os.path.exists(new_dir_path):
+        print('----- Dataset already is downloaded -----')
+        
+        
+    print('----- Downloading dataset folder is starting -----')        
+    gdown.download_folder('https://drive.google.com/drive/folders/1TlpGNU9miqJtGYs6hDBJfqlicyZLpJ8F?usp=drive_link', quiet=True)
 
     # Check if the old directory exists
     if os.path.exists(old_dir_path):
