@@ -11,11 +11,11 @@ import torch.nn.functional as F
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from sklearn.cluster import KMeans
-from utils.evaluation import eva
-from module.AE import AE
-from utils import load_data
-from utils.result import Result
-from utils.utils import get_format_variables
+from GC_SEE_utils.evaluation import eva
+from GC_SEE_module.AE import AE
+from GC_SEE_utils import load_data
+from GC_SEE_utils.result import Result
+from GC_SEE_utils.utils import get_format_variables
 
 
 def train(args, data, logger):
