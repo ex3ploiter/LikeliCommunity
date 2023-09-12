@@ -53,14 +53,16 @@ class LoadDataset(Dataset):
 def download_dataset():
     
     
-    # Remove the destination directory if it exists
-    if os.path.exists(new_dir_path):
-        shutil.rmtree(new_dir_path)
     
 
 
     old_dir_path = "./dataset"
     new_dir_path = "./GC_SEE_dataset"
+    
+    # Remove the destination directory if it exists
+    if os.path.exists(new_dir_path):
+        shutil.rmtree(new_dir_path)    
+    
     
     if os.path.exists(new_dir_path):
         print('----- Dataset already is downloaded -----')
