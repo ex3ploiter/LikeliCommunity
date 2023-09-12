@@ -47,3 +47,6 @@ parser.add_argument("-A", "--adj", dest="adj_type", type=str, default="tensor", 
                     help="The datatype of adj. 'tenor' and 'npy' are available.")
 parser.add_argument("-S", "--seed", type=int, default=0,
                     help="The random seed. The default value is 0.")
+
+
+parser.add_argument("-LI", "--likelihood", dest="likelihood_loss", default=True, action="store_true")

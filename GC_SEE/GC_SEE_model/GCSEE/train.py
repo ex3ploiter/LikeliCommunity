@@ -99,7 +99,9 @@ def train(args, data, logger):
 
         loss = args.lambda3 * kl_loss2 + args.lambda4 * kl_loss1 + re_loss 
         
-        loss=loss+ 1000*likelihood_loss
+        
+        if args.likelihood_loss:
+            loss=loss+ 1000*likelihood_loss
 
         optimizer.zero_grad()
         loss.backward()
