@@ -9,6 +9,7 @@ import torch
 import logging
 import numpy as np
 from torch.utils.data import Dataset
+import gdown
 
 from GC_SEE_utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
 from torch_geometric.datasets import WebKB, AttributedGraphDataset, WikipediaNetwork, Amazon
@@ -47,7 +48,29 @@ class LoadDataset(Dataset):
                torch.from_numpy(np.array(idx))
 
 
-def load_graph_data_pyG_Attributed_graph(root_path=".", dataset_name="dblp", show_details=False):
+
+def download_dataset():
+    gdown.download_folder('https://drive.google.com/drive/folders/1TlpGNU9miqJtGYs6hDBJfqlicyZLpJ8F?usp=drive_link', quiet=True)
+    
+    import os
+
+    old_dir_path = "./GC_SEE/GC_SEE_dataset/dataset"
+    new_dir_path = "./GC_SEE/GC_SEE_dataset/GC_SEE_dataset"
+
+    # Check if the old directory exists
+    if os.path.exists(old_dir_path):
+        try:
+            # Rename the directory
+            os.rename(old_dir_path, new_dir_path)
+            print(f"Directory renamed from {old_dir_path} to {new_dir_path}")
+        except OSError as e:
+            print(f"Error renaming directory: {e}")
+    else:
+        print(f"The directory {old_dir_path} does not exist.")
+    
+    
+
+def load_graph_data_pyG_Attributed_graph(root_path=".", dataset_name="Cora", show_details=False):
     print(dataset_name)
     dataset = AttributedGraphDataset(root='./data/attr/{}'.format(dataset_name), name="{}".format(dataset_name))
     data = dataset[0]
@@ -184,8 +207,9 @@ def load_data(k, dataset_path, dataset_name,
     """
     # If the dataset is not graph dataset, use construct_graph to get KNN graph.
     if k is None:
-        # feature, label, adj = load_graph_data(dataset_path, dataset_name)
-        feature, label, adj = load_graph_data_pyG_Attributed_graph(dataset_path, dataset_name)
+        feature, label, adj = load_graph_data(dataset_path, dataset_name)
+        # feature, label, adj = load_graph_data_pyG_Attributed_graph(root_path=dataset_path, dataset_name=dataset_name)
+        
     else:
         feature, label = load_non_graph_data(dataset_path, dataset_name)
         metric_dict = {"usps": "heat", "hhar": "cosine", "reut": "cosine"}
