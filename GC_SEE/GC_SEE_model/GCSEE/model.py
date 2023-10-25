@@ -64,7 +64,11 @@ class GCSEE(nn.Module):
         q_h = q_h.pow((self.v + 1.0) / 2.0)
         q_h = (q_h.t() / torch.sum(q_h, 1)).t()
 
-        z1 = self.gcn1(x, adj_norm)  # 500
+        try:
+          z1 = self.gcn1(x, adj_norm)  # 500
+        except:
+          z1 = self.gcn1(x.float(), adj_norm)  # 500
+
         z2 = self.gcn2(tra1, z1, adj_norm)  # 500
         z3 = self.gcn3(tra2, z2, adj_norm)  # 2000
         z4 = self.gcn4(tra3, z3, adj_norm)  # 10

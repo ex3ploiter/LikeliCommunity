@@ -51,7 +51,12 @@ class AE(Module):
         - enc_h3: the 3rd layers features of encoder
         - z: the embedding
         """
-        enc_h1 = F.relu(self.enc_1(x))
+        try:
+          enc_h1 = F.relu(self.enc_1(x))
+        except:
+          import torch
+          enc_h1 = F.relu(self.enc_1(x.to(torch.float32)))
+
         enc_h2 = F.relu(self.enc_2(enc_h1))
         enc_h3 = F.relu(self.enc_3(enc_h2))
         z = self.z_layer(enc_h3)
