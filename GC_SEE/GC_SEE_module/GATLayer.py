@@ -34,7 +34,11 @@ class GraphAttentionLayer(nn.Module):
         self.leaky_relu = nn.LeakyReLU(self.alpha)
 
     def forward(self, x, adj, M, concat=True):
-        h = torch.mm(x, self.W)
+        try :
+          h = torch.mm(x, self.W)
+        except:
+          h = torch.mm(x.float(), self.W.float())
+          
         attn_for_self = torch.mm(h, self.a_self)
         attn_for_neighs = torch.mm(h, self.a_neighs)
         attn_dense = attn_for_self + torch.transpose(attn_for_neighs, 0, 1)
