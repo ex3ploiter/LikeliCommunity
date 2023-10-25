@@ -142,7 +142,9 @@ def getLikelihood(model,data,feature, adj, adj_norm, M):
             clusters[label].append(node)    
             
             
-    Dataset_pyG = Data(x=data.feature.to(device).float(), edge_index=torch.tensor(data.adj).nonzero().t().contiguous(),y=torch.tensor(data.label).cuda()).cuda()            
+    
+                    
+    Dataset_pyG = Data(x=data.feature.to(device).float(), edge_index=torch.tensor(data.adj,dtype=torch.float64,requires_grad=True).nonzero().t().contiguous(),y=torch.tensor(data.label,dtype=torch.float64,requires_grad=True).cuda()).cuda()
     
     likelihood=0
     
