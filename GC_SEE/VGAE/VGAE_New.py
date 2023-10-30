@@ -7,16 +7,9 @@ from GC_SEE_module.GCN import GCN
 
 
 class Encoder(nn.Module):
-    def __init__(self, hidden_model, mean_model, std_model, hidden_dim,input_dim):
+    def __init__(self,  hidden_dim,input_dim):
         super().__init__()
 
-        # self.hidden_model = hidden_model
-        # self.mean_model = mean_model
-        # self.std_model = std_model
-        
-        # self.hidden_model=[]
-        # self.mean_model=[]
-        # self.std_model=[]
         
         self.hidden_model = nn.ModuleList([
             GCN(input_dim, hidden_dim),
@@ -86,23 +79,20 @@ class Decoder(nn.Module):
         return adj_reconstructed
 
 
-class VGAE(nn.Module):
-    def __init__(self, encoder: Encoder, decoder: Decoder):
+class VGAE_New(nn.Module):
+    def __init__(self, hidden_dim,input_dim):
         super().__init__()
 
-        self.encoder = encoder
-        self.decoder = decoder
+        self.encoder = Encoder(hidden_dim,input_dim)
+        self.decoder = Decoder()
 
-    def reparametrize(self, mu, logvar):
-        if self.training:
-            std = torch.exp(logvar)
-            eps = torch.randn_like(std)
-            return eps.mul(std) + mu
-        else:
-            return mu
+    def reparametrize(self, mean, log_var):
+        std = torch.exp(0.5 * log_var)
+        eps = torch.randn_like(std)
+        return mean + eps * std
 
     def forward(self, X,adj_):
         mu, logvar = self.encoder(X,adj_)
         z = self.reparametrize(mu, logvar)
         adj = self.decoder(z)
-        return adj, mu, logvar
+        return adj, mu, mu

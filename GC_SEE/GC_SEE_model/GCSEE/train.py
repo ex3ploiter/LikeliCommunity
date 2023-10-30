@@ -20,6 +20,9 @@ from GC_SEE_utils.utils import count_parameters, get_format_variables
 from torch_geometric.data import Data
 from ComputeLikelihood import LikelihoodComputer
 
+from GC_SEE_module.GCN import GCN
+from VGAE.VGAE_New import VGAE_New
+
 
 device="cuda" if torch.cuda.is_available() else "cpu"
 
@@ -75,6 +78,11 @@ def train(args, data, logger):
 
     max_acc, embedding, q_h, q_r, q_z = 0, 0, 0, 0, 0
     max_acc_corresponding_metrics = [0, 0, 0, 0]
+    
+    
+    gcc=GCN(feature.shape[1],32).cuda()
+    
+    
     for epoch in range(1, args.max_epoch + 1):
         model.train()
         x_bar, A_pred, q_z, q_r, q_h, embedding = model(feature, adj, adj_norm, M)
@@ -101,8 +109,38 @@ def train(args, data, logger):
         
         
         if args.likelihood_loss:
-            likelihood_loss=getLikelihood(model,data,data.feature,adj,adj_norm,M)
-            loss=loss+ 1000*likelihood_loss
+            # likelihood_loss=getLikelihood(model,data,data.feature,adj,adj_norm,M)
+            # loss=loss+ 1000*likelihood_loss
+            
+            
+            
+            _, _, pred, _, _, embedding = model(feature, adj, adj_norm, M)
+            temp_loss=0.
+            for i in range(pred.shape[1]):
+                scores=pred[:,i]
+                feature_temp=feature*scores[:, None]
+                
+                adj_temp=adj*scores
+                adj_temp=adj_temp*scores
+                
+                adj_norm_temp=adj_norm*scores
+                adj_norm_temp=adj_norm_temp*scores                
+                
+                M_temp=M*scores
+                M_temp=M_temp*scores   
+                
+                temp_loss+=getLikelihood(feature_temp,adj_norm_temp)
+                
+            loss+=temp_loss
+                
+                
+                
+                
+            
+            
+            
+            
+            
 
         optimizer.zero_grad()
         loss.backward()
@@ -127,33 +165,13 @@ def train(args, data, logger):
     return result
 
 
-def getLikelihood(model,data,feature, adj, adj_norm, M):
+def getLikelihood_temp(feature, adj, adj_norm):
     
-    _, _, pred, _, _, embedding = model(feature.to(device), adj, adj_norm, M)
-    predicted_class = torch.argmax(pred, dim=1)
-    clusters = {}
-
-    # Iterate through nodes and assign them to clusters based on predicted labels
-    for node, label in enumerate(predicted_class):
-        label=label.item()
-        if label not in clusters:
-            clusters[label] = [node]
-        else:
-            clusters[label].append(node)    
-            
-            
     
-                    
-    Dataset_pyG = Data(x=data.feature.to(device).float(), edge_index=torch.tensor(data.adj,dtype=torch.float64,requires_grad=True).nonzero().t().contiguous(),y=torch.tensor(data.label,dtype=torch.float64,requires_grad=True).cuda()).cuda()
+    model=VGAE_New(64,feature.shape[1])
     
-    likelihood=0
+    model_temp=LikelihoodComputer(feature,adj_norm,model)
+    return model_temp()
     
-    for key in clusters.keys():
     
-        Cluster=Dataset_pyG.cuda().subgraph(torch.tensor(clusters[key]).cuda())
-        model_Likelihood=LikelihoodComputer(Cluster)
-        likelihood+=model_Likelihood()
-        
-    return likelihood
-        
     

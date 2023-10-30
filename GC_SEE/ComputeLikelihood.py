@@ -16,11 +16,11 @@ from sklearn.metrics import roc_auc_score
 
 from VGAE.VGAE_utils import adj_matrix_from_edge_index
 from main_utils import get_VGAE_hidden_models
-from VGAE.VGAE_loss import VGAELoss
+from VGAE.VGAE_loss import VGAELoss,VGAELoss_Main
 
 
 class LikelihoodComputer(nn.Module):
-    def __init__(self, dataset):
+    def __init__(self, feature,adj,model):
         super(LikelihoodComputer, self).__init__()
         self.config = config = {
             "DEVICE": "cuda" if torch.cuda.is_available() else "cpu",
@@ -30,35 +30,28 @@ class LikelihoodComputer(nn.Module):
         }
         self.device = self.config["DEVICE"]
         self.hidden_dim = self.config["hidden_dim"]  # Adjust as needed
-        self.dataset = dataset
+        self.feature=feature
+        self.adj=adj
 
         # Create models
 
-        self.hidden_model, self.mean_model, self.std_model = get_VGAE_hidden_models(
-            dataset, self.hidden_dim)
+ 
 
         # Initialize encoder and decoder
-        self.encoder = Encoder(
-            hidden_model=self.hidden_model,
-            mean_model=self.mean_model,
-            std_model=self.std_model
-        )
-
-        self.decoder = Decoder()
+      
 
         # Create VGAE model
-        self.model = VGAE(
-            encoder=self.encoder,
-            decoder=self.decoder
-        )
+        # self.model = VGAE()
+        # self.model = VGAE_Model()
+        self.model=model
 
         # Define loss function and optimizer
-        self.loss_function = VGAELoss(norm=2)
+        self.loss_function = VGAELoss_Main(norm=2)
         self.optimizer = AdamW(params=self.model.parameters(), lr=config["LR"])
 
         self.train()
 
-    def train_epoch(self, data):
+    def train_epoch(self):
         self.model.train()
         self.model.to(self.device)
         self.loss_function.to(self.device)
@@ -67,40 +60,29 @@ class LikelihoodComputer(nn.Module):
         targets = []
         total_loss = 0.
 
-        adj = adj_matrix_from_edge_index(data.x, data.edge_index)
+        # adj = adj_matrix_from_edge_index(self.feature, self.adj)
+        adj=self.adj
 
         self.optimizer.zero_grad()
-        adj_output, mu, logvar = self.model.to(self.device)(data.to(self.device))
+        adj_output, mu, logvar = self.model.to(self.device)(self.feature,self.adj)
 
         loss = self.loss_function(adj_output, mu, logvar, adj.to(self.device))
 
         total_loss += loss.item()
 
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+        loss.backward(retain_graph=True)
+        # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
         self.optimizer.step()
-
-        # preds.append(adj_output.flatten())
-        # targets.append(adj.flatten())
-
-        # preds = torch.cat(preds, dim=0).sigmoid().detach().cpu().numpy()
-        # targets = torch.cat(targets, dim=0).detach().cpu().numpy()
-        # roc_auc = roc_auc_score(targets, preds)
-
-        # print(f"TRAIN Loss: {total_loss}, ROC AUC: {roc_auc}")
-        
         # print(f"VGAE TRAIN Loss: {total_loss}")
 
     def train(self):
         for epoch in range(self.config["EPOCHS"]):
-            self.train_epoch(
-                data=self.dataset,
-            )
+            self.train_epoch()
 
     def ComputeLikelihood(self):
-        adj_output, _, _ = self.model(self.dataset)
+        adj_output, _, _ = self.model(self.feature,self.adj)
         adj_output = nn.Sigmoid()(adj_output)
-        return adj_output.sum()
+        return -adj_output.mean()
 
     def forward(self):
         return self.ComputeLikelihood()
