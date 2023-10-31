@@ -57,11 +57,11 @@ class LikelihoodComputer_pyG(nn.Module):
         return loss.item()
 
     def train(self):
-        print("\n")
+        # print("\n")
         for epoch in range(self.config["EPOCHS"]):
             loss = self.train_epoch()
-            print(f"VGAE TRAIN Loss: {loss}")
-        print("\n")
+            # print(f"VGAE TRAIN Loss: {loss}")
+        # print("\n")
 
     def ComputeLikelihood(self):
         adj_output = self.model(self.feature, self.edge)
