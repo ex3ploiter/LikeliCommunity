@@ -47,7 +47,7 @@ class LikelihoodComputer(nn.Module):
 
         # Define loss function and optimizer
         self.loss_function = VGAELoss_Main(norm=2)
-        self.optimizer = torch.optom.Adam(params=self.model.parameters(), lr=config["LR"])
+        self.optimizer = torch.optim.Adam(params=self.model.parameters(), lr=config["LR"])
 
         self.train()
 
