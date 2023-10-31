@@ -32,5 +32,19 @@ class DeepVGAE(VGAE):
         z = self.encode(x, edge_index)
         adj_pred = self.decoder.forward_all(z)
         return adj_pred
+    
+    def loss(self, x, pos_edge_index,adj):
+        
+        z = self.encode(x, pos_edge_index)
+        adj_pred=self.decoder.forward_all(z)
 
+        loss1=nn.CrossEntropyLoss()(adj.view(-1),adj_pred.view(-1))
+        loss2 = 1 / x.size(0) * self.kl_loss()
+        
+
+      
+
+        
+
+        return loss1 -loss2
    

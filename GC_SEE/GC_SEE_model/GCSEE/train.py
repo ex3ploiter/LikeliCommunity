@@ -19,9 +19,11 @@ from GC_SEE_utils.result import Result
 from GC_SEE_utils.utils import count_parameters, get_format_variables
 from torch_geometric.data import Data
 from ComputeLikelihood import LikelihoodComputer
+from ComputeLikelihood_New import LikelihoodComputer_pyG
 
 from GC_SEE_module.GCN import GCN
 from VGAE.VGAE_New import VGAE_New
+
 
 
 device="cuda" if torch.cuda.is_available() else "cpu"
@@ -46,6 +48,10 @@ def visualize_loss_and_accuracy(loss_history, accuracy_history):
     plt.title('Training NMI')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
+    
+    plt.ylim(0,1)
+    plt.yticks([i/10 for i in range(11)])
+     
 
     plt.tight_layout()
     # plt.show()
@@ -152,7 +158,7 @@ def train(args, data, logger):
                 adj_temp=adj_temp*scores
                 
                 adj_norm_temp=adj_norm*scores
-                adj_norm_temp=adj_norm_temp*scores                
+                # adj_norm_temp=adj_norm_temp*scores                
                 
                 M_temp=M*scores
                 M_temp=M_temp*scores   
@@ -161,7 +167,7 @@ def train(args, data, logger):
                 temp_loss+=getLikelihood_temp(feature_temp,adj_temp,adj_norm_temp)
                 print("\n")
                 
-            loss+=temp_loss
+            loss+=-20*temp_loss
                 
                 
                 
@@ -211,10 +217,17 @@ def train(args, data, logger):
 def getLikelihood_temp(feature, adj, adj_norm):
     
     
-    model=VGAE_New(32,feature.shape[1])
+    # model=VGAE_New(32,feature.shape[1])
     
-    model_temp=LikelihoodComputer(feature,adj_norm,model)
+    # model_temp=LikelihoodComputer(feature,adj_norm,model)
+    # return model_temp()
+    
+    
+    model_temp=LikelihoodComputer_pyG(feature,adj)
     return model_temp()
+    
+    
+    
     
     
     

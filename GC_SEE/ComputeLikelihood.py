@@ -73,7 +73,7 @@ class LikelihoodComputer(nn.Module):
         loss.backward(retain_graph=True)
         # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
         self.optimizer.step()
-        # print(f"VGAE TRAIN Loss: {total_loss}")
+        print(f"VGAE TRAIN Loss: {total_loss}")
 
     def train(self):
         for epoch in range(self.config["EPOCHS"]):
