@@ -24,9 +24,9 @@ class LikelihoodComputer(nn.Module):
         super(LikelihoodComputer, self).__init__()
         self.config = config = {
             "DEVICE": "cuda" if torch.cuda.is_available() else "cpu",
-            "LR": 0.001,
+            "LR": 0.01,
             "EPOCHS": 10 , # Adjust the number of epochs as needed
-            "hidden_dim" : 64
+            "hidden_dim" : 128
         }
         self.device = self.config["DEVICE"]
         self.hidden_dim = self.config["hidden_dim"]  # Adjust as needed
@@ -47,7 +47,7 @@ class LikelihoodComputer(nn.Module):
 
         # Define loss function and optimizer
         self.loss_function = VGAELoss_Main(norm=2)
-        self.optimizer = AdamW(params=self.model.parameters(), lr=config["LR"])
+        self.optimizer = torch.optom.Adam(params=self.model.parameters(), lr=config["LR"])
 
         self.train()
 

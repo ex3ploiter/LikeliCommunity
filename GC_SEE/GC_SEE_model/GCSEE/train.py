@@ -157,7 +157,9 @@ def train(args, data, logger):
                 M_temp=M*scores
                 M_temp=M_temp*scores   
                 
+                print("\n")
                 temp_loss+=getLikelihood_temp(feature_temp,adj_temp,adj_norm_temp)
+                print("\n")
                 
             loss+=temp_loss
                 
