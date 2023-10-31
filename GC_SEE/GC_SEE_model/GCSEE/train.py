@@ -26,6 +26,31 @@ from VGAE.VGAE_New import VGAE_New
 
 device="cuda" if torch.cuda.is_available() else "cpu"
 
+import matplotlib.pyplot as plt
+
+def visualize_loss_and_accuracy(loss_history, accuracy_history):
+    plt.figure(figsize=(12, 5))
+    plt.rcParams['font.family'] = 'serif'
+
+
+    # Plot training loss
+    plt.subplot(1, 2, 1)
+    plt.plot(loss_history)
+    plt.title('Training Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+
+    # Plot training accuracy
+    plt.subplot(1, 2, 2)
+    plt.plot(accuracy_history)
+    plt.title('Training NMI')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+
+    plt.tight_layout()
+    # plt.show()
+    plt.savefig('./plot.png')
+    plt.close()
 
 def train(args, data, logger):
     # format: [lambda3, lambda4, max_epoch, lr]
@@ -81,6 +106,9 @@ def train(args, data, logger):
     
     
     gcc=GCN(feature.shape[1],32).cuda()
+    
+    loss_history = []
+    accuracy_history = []
     
     
     for epoch in range(1, args.max_epoch + 1):
@@ -151,6 +179,8 @@ def train(args, data, logger):
         loss.backward()
         optimizer.step()
         scheduler.step()
+        
+        
 
         with torch.no_grad():
             model.eval()
@@ -162,6 +192,12 @@ def train(args, data, logger):
                 max_acc_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
+            
+            loss_history.append(loss.item())
+            accuracy_history.append(nmi)
+        visualize_loss_and_accuracy(loss_history,accuracy_history)
+            
+            
     result = Result(embedding=embedding, max_acc_corresponding_metrics=max_acc_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
