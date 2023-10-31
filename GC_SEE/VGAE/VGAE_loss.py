@@ -3,6 +3,21 @@ from torch import nn
 
 
 class VGAELoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    
+        self.ce = nn.CrossEntropyLoss()
+        
+
+    def forward(self, adj_output, adj_target):
+        cross_entropy =  self.ce(adj_output.flatten(), adj_target.flatten())
+        
+        loss=cross_entropy
+        return loss
+
+
+class VGAELoss_Main(nn.Module):
     def __init__(self, weight=None, norm: float = 0.5):
         super().__init__()
 
@@ -16,4 +31,4 @@ class VGAELoss(nn.Module):
         cross_entropy = self.norm * self.ce(adj_output.flatten(), adj_target.flatten())
         kl_divergence = 0.5 / adj_output.size(0) * (1 + 2 * log_std - mean ** 2 - torch.exp(log_std) ** 2).sum(1).mean()
         loss = cross_entropy - kl_divergence
-        return loss
+        return loss        

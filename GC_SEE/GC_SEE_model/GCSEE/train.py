@@ -53,7 +53,7 @@ def train(args, data, logger):
     model.ae.load_state_dict(torch.load(pretrain_ae_filename, map_location='cpu'))
     model.gat.load_state_dict(torch.load(pretrain_gat_filename, map_location='cpu'))
 
-    optimizer = Adam(model.parameters(), lr=args.lr)
+    optimizer = Adam(model.parameters(), lr=args.lr )
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.max_epoch)
 
     M = data.M.to(args.device).float()
@@ -129,16 +129,21 @@ def train(args, data, logger):
                 M_temp=M*scores
                 M_temp=M_temp*scores   
                 
-                temp_loss+=getLikelihood(feature_temp,adj_norm_temp)
+                temp_loss+=getLikelihood_temp(feature_temp,adj_temp,adj_norm_temp)
                 
             loss+=temp_loss
                 
                 
                 
                 
-            
-            
-            
+        # for name, param in model.named_parameters():
+        #     if param.grad is not None:
+        #         print(f"Parameter Name: {name}")
+        #         print(f"Gradient:\n{param.grad.sum()}")
+        #     else:
+        #         print(f"No gradient for parameter {name}")            
+                
+                
             
             
 
@@ -168,7 +173,7 @@ def train(args, data, logger):
 def getLikelihood_temp(feature, adj, adj_norm):
     
     
-    model=VGAE_New(64,feature.shape[1])
+    model=VGAE_New(256,feature.shape[1])
     
     model_temp=LikelihoodComputer(feature,adj_norm,model)
     return model_temp()
