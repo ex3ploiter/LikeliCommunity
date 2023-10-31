@@ -22,7 +22,7 @@ from VGAE.VGAE_pyG import DeepVGAE
 
 class LikelihoodComputer_pyG(nn.Module):
     def __init__(self, feature, adj):
-        super(LikelihoodComputer, self).__init__()
+        super(LikelihoodComputer_pyG, self).__init__()
         self.config = config = {
             "DEVICE": "cuda" if torch.cuda.is_available() else "cpu",
             "LR": 0.01,
