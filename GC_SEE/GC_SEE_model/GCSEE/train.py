@@ -167,7 +167,7 @@ def train(args, data, logger):
                 temp_loss+=getLikelihood_temp(feature_temp,adj_temp,adj_norm_temp)
                 # print("\n")
                 
-            loss+=-20*temp_loss
+            loss+=-22*temp_loss
                 
                 
                 
