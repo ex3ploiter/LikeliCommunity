@@ -217,7 +217,7 @@ def train(args, data, logger):
 def getLikelihood_temp(feature, adj, adj_norm):
     
     
-    # model=VGAE_New(32,feature.shape[1])
+    model=VGAE_New(32,feature.shape[1])
     
     # model_temp=LikelihoodComputer(feature,adj_norm,model)
     # return model_temp()
