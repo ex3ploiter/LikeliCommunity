@@ -155,7 +155,7 @@ def train(args, data, logger):
                 feature_temp=feature*scores[:, None]
                 
                 adj_temp=adj*scores
-                adj_temp=adj_temp*scores
+                # adj_temp=adj_temp*scores
                 
                 adj_norm_temp=adj_norm*scores
                 # adj_norm_temp=adj_norm_temp*scores                
